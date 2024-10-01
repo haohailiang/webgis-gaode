@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02_地图控件 </title>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@10.2.1/ol.min.css"> -->
+    <link rel="stylesheet" href="./lib/ol-10.2.1.min.css">
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .ol-zoomslider {
+            top: 8em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/ol@10.2.1/dist/ol.min.js"></script> -->
+    <script src="./lib/ol-10.2.1.min.js"></script>
+    <script>
+        // 初始化一个高德图层
+        const gaode = new ol.layer.Tile({
+            title: '高德地图',
+            source: new ol.source.XYZ({
+                url: 'http://wprd0{1-4}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&style=7&x={x}&y={y}&z={z}',
+                wrapX: false,
+            })
+        });
+        // 初始化openlayer地图
+        const map = new ol.Map({
+            target: 'map',
+            layers: [gaode],
+            view: new ol.View({ // 视图
+                center: [114.30, 30.50],
+                zoom: 14,
+                projection: 'EPSG:4326'
+            })
+        })
+
+        // 视图跳转控件
+        const ZoomToExtent = new ol.control.ZoomToExtent({
+            extend: [110, 30, 160, 30]
+        })
+        map.addControl(ZoomToExtent)
+
+        // 放大缩小控件
+        const zoomSlider = new ol.control.ZoomSlider();
+        map.addControl(zoomSlider);
+
+        // 全屏控件
+        const fullScreen = new ol.control.FullScreen();
+        map.addControl(fullScreen);
+    </script>
+</body>
+
+</html>

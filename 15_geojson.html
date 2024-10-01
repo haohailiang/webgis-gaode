@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width" />
+    <title>15_geojson</title>
+    <style>
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript">
+        window._AMapSecurityConfig = {
+            securityJsCode: "2cb51d690b11dbb0e1840cf33449fd56",
+        };
+    </script>
+    <script src="https://webapi.amap.com/loader.js"></script>
+    <script type="text/javascript">
+        AMapLoader.load({
+            key: "a2679646b1a47b2fb626903bede79915", //申请好的Web端开发者 Key，调用 load 时必填
+            version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
+        })
+            .then((AMap) => {
+                window.map = new AMap.Map("container", {
+                    zoom: 12, //地图级别
+                    // center: [116.397428, 39.90923], //地图中心点
+                    center: [114.3, 30.6], //地图中心点
+                    // layers: [new AMap.TileLayer.Satellite()], //设置图层,可设置成包含一个或多个图层的数组
+                    // mapStyle: "amap://styles/whitesmoke", //设置地图的显示样式
+                    viewMode: "2D", //设置地图模式
+                });
+
+                // var geojson = new AMap.Geo
+                console.log(AMap)
+
+                map.on('click', e => {
+                    var text = '您在 [ ' + e.lnglat.getLng() + ',' + e.lnglat.getLat() + ' ] '
+                    console.log(text)
+                    // addMarker(e.lnglat.getLng(), e.lnglat.getLat());
+                    addMarker2(e.lnglat.getLng(), e.lnglat.getLat());
+
+
+                })
+
+            })
+            .catch((e) => {
+                console.error(e); //加载错误提示
+            });
+
+        function addMarker2(lng, lat) {
+            const marker = new AMap.Marker({
+                title: '北京',
+                position: new AMap.LngLat(lng, lat),
+            });
+            marker.setMap(map);
+        }
+
+        function getData() {
+            if (!localStorage.getItem('geojson')) {
+                localStorage.setItem('geojson', '[]');
+                return [];
+            }
+
+            return JSON.parse(localStorage.getItem('geojson'));
+        }
+
+        function setData(data) {
+            localStorage.setItem('geojson', JSON.stringify(data));
+        }
+    </script>
+</body>
+
+</html>

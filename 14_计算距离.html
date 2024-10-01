@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width" />
+    <title>14_计算距离</title>
+    <style>
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript">
+        window._AMapSecurityConfig = {
+            securityJsCode: "2cb51d690b11dbb0e1840cf33449fd56",
+        };
+    </script>
+    <script src="https://webapi.amap.com/loader.js"></script>
+    <script type="text/javascript">
+        AMapLoader.load({
+            key: "a2679646b1a47b2fb626903bede79915", //申请好的Web端开发者 Key，调用 load 时必填
+            version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
+        })
+            .then((AMap) => {
+                window.map = new AMap.Map("container", {
+                    zoom: 12, //地图级别
+                    // center: [116.397428, 39.90923], //地图中心点
+                    center: [114.3, 30.6], //地图中心点
+                    // layers: [new AMap.TileLayer.Satellite()], //设置图层,可设置成包含一个或多个图层的数组
+                    // mapStyle: "amap://styles/whitesmoke", //设置地图的显示样式
+                    viewMode: "2D", //设置地图模式
+                });
+
+                var m1 = new AMap.Marker({
+                    map: map,
+                    draggable: true,
+                    position: new AMap.LngLat(116.368904, 39.923423)
+                });
+                var m2 = new AMap.Marker({
+                    map: map,
+                    draggable: true,
+                    position: new AMap.LngLat(116.387271, 39.922501)
+                });
+                map.setFitView();
+
+                var line = new AMap.Polyline({
+                    strokeColor: '#80d8ff',
+                    isOutline: true,
+                    outlineColor: 'white'
+                });
+                line.setMap(map);
+                var text = new AMap.Text({
+                    text: '',
+                    style: {
+                        'background-color': '#29b6f6',
+                        'border-color': '#e1f5fe',
+                        'font-size': '12px'
+                    }
+                });
+                text.setMap(map)
+
+                function computeDis() {
+                    var p1 = m1.getPosition();
+                    var p2 = m2.getPosition();
+                    var textPos = p1.divideBy(2).add(p2.divideBy(2));
+                    var distance = Math.round(p1.distance(p2));
+                    var path = [p1, p2];
+                    line.setPath(path);
+                    text.setText('两点相距' + distance + '米')
+                    text.setPosition(textPos)
+                }
+                computeDis();
+                m1.on('dragging', computeDis)
+                m2.on('dragging', computeDis)
+            })
+            .catch((e) => {
+                console.error(e); //加载错误提示
+            });
+
+    </script>
+</body>
+
+</html>
